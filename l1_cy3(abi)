@@ -1,0 +1,438 @@
+mysql> use org
+Database changed
+mysql> create table Employee
+    -> (
+    -> empno int,
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> create table Employee( empno varchar,
+    -> empname ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',
+empname' at line 1
+mysql> create table Employee( empno varchar(20), empname varchar(20),dob date,address text,mobileno int,dept varchar
+    -> (20),salary int,primary key(empno));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table Department(
+    -> deptno varchar(20),deptname varchar(30),location varchar(40),primary key(deptno));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> alter table Employee add foreign key(deptno) references Department(deptno) on delete cascade;
+ERROR 1072 (42000): Key column 'deptno' doesn't exist in table
+mysql> alter table Employee add foreign key(dept) references Department(deptno) on delete cascade;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table Employee rename coloumn dept to deptno;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dept to deptno' at line 1
+mysql> alter table Employee rename column dept to deptno;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table Employee add designation varchar(20);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> describe Employee;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| empno       | varchar(20) | NO   | PRI | NULL    |       |
+| empname     | varchar(20) | YES  |     | NULL    |       |
+| dob         | date        | YES  |     | NULL    |       |
+| address     | text        | YES  |     | NULL    |       |
+| mobileno    | int         | YES  |     | NULL    |       |
+| deptno      | varchar(20) | YES  | MUL | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| designation | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+mysql> describe Department;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| deptno   | varchar(20) | NO   | PRI | NULL    |       |
+| deptname | varchar(30) | YES  |     | NULL    |       |
+| location | varchar(40) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> insert into Department(deptno)
+    -> values(D01);
+ERROR 1054 (42S22): Unknown column 'D01' in 'field list'
+mysql> insert into Department(deptno) values(D01)
+    -> insert into Department(deptno) values(D01);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'insert into Department(deptno) values(D01)' at line 2
+mysql> insert into Department(deptno) values("D01");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Department(deptno) values("D02");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Department(deptno) values("D03");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Department(deptno) values("D04");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Department(deptno) values("D05");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Department;
++--------+----------+----------+
+| deptno | deptname | location |
++--------+----------+----------+
+| D01    | NULL     | NULL     |
+| D02    | NULL     | NULL     |
+| D03    | NULL     | NULL     |
+| D04    | NULL     | NULL     |
+| D05    | NULL     | NULL     |
++--------+----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation)
+    -> values('emp2','Ann',111,'D01',20000,'Manager');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp1','Ann',22,'D01',20000,'Manager');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> delete from Employee where mobileno > 0;
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> select * from Employee;
+Empty set (0.00 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp1','Ann',111,'D01',20000,'Manager');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp1','Joker',,'D02',30000,'CompAss');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ','D02',30000,'CompAss')' at line 1
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp1','Joker',222,'D02',30000,'CompAss');
+ERROR 1062 (23000): Duplicate entry 'emp1' for key 'Employee.PRIMARY'
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp2','Joker',222,'D02',30000,'CompAss');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp3','Bane',333,'D03',3000,'CompAss');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp4','Harley',444,'D04',4000,'CompAss');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp5','Brook',555,'D05',7000,'CompAss');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp6','John',666,'D01',200000,'CompAss');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp7','Luffy',777,'D02',299999,'Manager');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp8','Zoro',888,'D03',3999,'CompAss');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp9','Sanji',999,'D04',2500,'CompAss');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into Employee(empno,empname,mobileno,deptno,salary,designation) values('emp10','Nami',100,'D05',21500,'CompAss');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Department;
++--------+----------+----------+
+| deptno | deptname | location |
++--------+----------+----------+
+| D01    | NULL     | NULL     |
+| D02    | NULL     | NULL     |
+| D03    | NULL     | NULL     |
+| D04    | NULL     | NULL     |
+| D05    | NULL     | NULL     |
++--------+----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Employee;
++-------+---------+------+---------+----------+--------+--------+-------------+
+| empno | empname | dob  | address | mobileno | deptno | salary | designation |
++-------+---------+------+---------+----------+--------+--------+-------------+
+| emp1  | Ann     | NULL | NULL    |      111 | D01    |  20000 | Manager     |
+| emp10 | Nami    | NULL | NULL    |      100 | D05    |  21500 | CompAss     |
+| emp2  | Joker   | NULL | NULL    |      222 | D02    |  30000 | CompAss     |
+| emp3  | Bane    | NULL | NULL    |      333 | D03    |   3000 | CompAss     |
+| emp4  | Harley  | NULL | NULL    |      444 | D04    |   4000 | CompAss     |
+| emp5  | Brook   | NULL | NULL    |      555 | D05    |   7000 | CompAss     |
+| emp6  | John    | NULL | NULL    |      666 | D01    | 200000 | CompAss     |
+| emp7  | Luffy   | NULL | NULL    |      777 | D02    | 299999 | Manager     |
+| emp8  | Zoro    | NULL | NULL    |      888 | D03    |   3999 | CompAss     |
+| emp9  | Sanji   | NULL | NULL    |      999 | D04    |   2500 | CompAss     |
++-------+---------+------+---------+----------+--------+--------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> select empno, empname from Employee where deptno='D02';
++-------+---------+
+| empno | empname |
++-------+---------+
+| emp2  | Joker   |
+| emp7  | Luffy   |
++-------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select empno, empname, designation, deptno, salary from Employee where order by salary desc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by salary desc' at line 1
+mysql> select empno, empname, designation, deptno, salary from Employee order by salary desc;
++-------+---------+-------------+--------+--------+
+| empno | empname | designation | deptno | salary |
++-------+---------+-------------+--------+--------+
+| emp7  | Luffy   | Manager     | D02    | 299999 |
+| emp6  | John    | CompAss     | D01    | 200000 |
+| emp2  | Joker   | CompAss     | D02    |  30000 |
+| emp10 | Nami    | CompAss     | D05    |  21500 |
+| emp1  | Ann     | Manager     | D01    |  20000 |
+| emp5  | Brook   | CompAss     | D05    |   7000 |
+| emp4  | Harley  | CompAss     | D04    |   4000 |
+| emp8  | Zoro    | CompAss     | D03    |   3999 |
+| emp3  | Bane    | CompAss     | D03    |   3000 |
+| emp9  | Sanji   | CompAss     | D04    |   2500 |
++-------+---------+-------------+--------+--------+
+10 rows in set (0.00 sec)
+
+mysql> select empno, empname from Employee where salary between 2000 and 5000;
++-------+---------+
+| empno | empname |
++-------+---------+
+| emp3  | Bane    |
+| emp4  | Harley  |
+| emp8  | Zoro    |
+| emp9  | Sanji   |
++-------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct designation from Employee;
++-------------+
+| designation |
++-------------+
+| Manager     |
+| CompAss     |
++-------------+
+2 rows in set (0.00 sec)
+
+mysql> update Employee set salary=45000 where designation=Manager;
+ERROR 1054 (42S22): Unknown column 'Manager' in 'where clause'
+mysql> update Employee set salary=45000 where designation='Manager';
+Query OK, 2 rows affected (0.03 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> update Employee set mobileno=5646 where empname='John';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> delete from Employee where salary = 7000;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select empname,mobileno from Employee where 'empname'='%a';
+Empty set (0.00 sec)
+
+mysql> select empname,mobileno from Employee where 'empname'='%A';
+Empty set (0.00 sec)
+
+mysql> select empname,mobileno from Employee where 'empname'='A%';
+Empty set (0.00 sec)
+
+mysql> select * from Employee;
++-------+---------+------+---------+----------+--------+--------+-------------+
+| empno | empname | dob  | address | mobileno | deptno | salary | designation |
++-------+---------+------+---------+----------+--------+--------+-------------+
+| emp1  | Ann     | NULL | NULL    |      111 | D01    |  45000 | Manager     |
+| emp10 | Nami    | NULL | NULL    |      100 | D05    |  21500 | CompAss     |
+| emp2  | Joker   | NULL | NULL    |      222 | D02    |  30000 | CompAss     |
+| emp3  | Bane    | NULL | NULL    |      333 | D03    |   3000 | CompAss     |
+| emp4  | Harley  | NULL | NULL    |      444 | D04    |   4000 | CompAss     |
+| emp6  | John    | NULL | NULL    |     5646 | D01    | 200000 | CompAss     |
+| emp7  | Luffy   | NULL | NULL    |      777 | D02    |  45000 | Manager     |
+| emp8  | Zoro    | NULL | NULL    |      888 | D03    |   3999 | CompAss     |
+| emp9  | Sanji   | NULL | NULL    |      999 | D04    |   2500 | CompAss     |
++-------+---------+------+---------+----------+--------+--------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select empname,mobileno from Employee where empname='A%';
+Empty set (0.00 sec)
+
+mysql> select empname,mobileno from Employee where empname like 'A%';
++---------+----------+
+| empname | mobileno |
++---------+----------+
+| Ann     |      111 |
++---------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from Employee;
++-------+---------+------+---------+----------+--------+--------+-------------+
+| empno | empname | dob  | address | mobileno | deptno | salary | designation |
++-------+---------+------+---------+----------+--------+--------+-------------+
+| emp1  | Ann     | NULL | NULL    |      111 | D01    |  45000 | Manager     |
+| emp10 | Nami    | NULL | NULL    |      100 | D05    |  21500 | CompAss     |
+| emp2  | Joker   | NULL | NULL    |      222 | D02    |  30000 | CompAss     |
+| emp3  | Bane    | NULL | NULL    |      333 | D03    |   3000 | CompAss     |
+| emp4  | Harley  | NULL | NULL    |      444 | D04    |   4000 | CompAss     |
+| emp6  | John    | NULL | NULL    |     5646 | D01    | 200000 | CompAss     |
+| emp7  | Luffy   | NULL | NULL    |      777 | D02    |  45000 | Manager     |
+| emp8  | Zoro    | NULL | NULL    |      888 | D03    |   3999 | CompAss     |
+| emp9  | Sanji   | NULL | NULL    |      999 | D04    |   2500 | CompAss     |
++-------+---------+------+---------+----------+--------+--------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from Employee where len(empname)>2 and salary > 20000;
+ERROR 1305 (42000): FUNCTION org.len does not exist
+mysql> select * from Employee where LEN(empname)>2 and salary > 20000;
+ERROR 1305 (42000): FUNCTION org.LEN does not exist
+mysql> select * from Employee where length(empname)>2 and salary > 20000;
++-------+---------+------+---------+----------+--------+--------+-------------+
+| empno | empname | dob  | address | mobileno | deptno | salary | designation |
++-------+---------+------+---------+----------+--------+--------+-------------+
+| emp1  | Ann     | NULL | NULL    |      111 | D01    |  45000 | Manager     |
+| emp10 | Nami    | NULL | NULL    |      100 | D05    |  21500 | CompAss     |
+| emp2  | Joker   | NULL | NULL    |      222 | D02    |  30000 | CompAss     |
+| emp6  | John    | NULL | NULL    |     5646 | D01    | 200000 | CompAss     |
+| emp7  | Luffy   | NULL | NULL    |      777 | D02    |  45000 | Manager     |
++-------+---------+------+---------+----------+--------+--------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Employee where empname='emp1'or 'emp2' or 'emp3';
+Empty set, 2 warnings (0.00 sec)
+
+mysql> select * from Employee where empname='emp1'and 'emp2' and 'emp3';
+Empty set, 1 warning (0.00 sec)
+
+mysql> select * from Employee where empname='emp1', 'emp2','emp3';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'emp2','emp3'' at line 1
+mysql> select * from Employee where empno='emp1', 'emp2','emp3';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 'emp2','emp3'' at line 1
+mysql> select * from Employee where empno='emp1'or 'emp2'or'emp3';
++-------+---------+------+---------+----------+--------+--------+-------------+
+| empno | empname | dob  | address | mobileno | deptno | salary | designation |
++-------+---------+------+---------+----------+--------+--------+-------------+
+| emp1  | Ann     | NULL | NULL    |      111 | D01    |  45000 | Manager     |
++-------+---------+------+---------+----------+--------+--------+-------------+
+1 row in set, 2 warnings (0.00 sec)
+
+mysql> select * from Employee where empno='emp1'or empno='emp2'or empno='emp6';
++-------+---------+------+---------+----------+--------+--------+-------------+
+| empno | empname | dob  | address | mobileno | deptno | salary | designation |
++-------+---------+------+---------+----------+--------+--------+-------------+
+| emp1  | Ann     | NULL | NULL    |      111 | D01    |  45000 | Manager     |
+| emp2  | Joker   | NULL | NULL    |      222 | D02    |  30000 | CompAss     |
+| emp6  | John    | NULL | NULL    |     5646 | D01    | 200000 | CompAss     |
++-------+---------+------+---------+----------+--------+--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select empno, empname from Employee where salary between 12000 and 30000;
++-------+---------+
+| empno | empname |
++-------+---------+
+| emp10 | Nami    |
+| emp2  | Joker   |
++-------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from Employee where designation='Manager'or designation='CompAss';
++-------+---------+------+---------+----------+--------+--------+-------------+
+| empno | empname | dob  | address | mobileno | deptno | salary | designation |
++-------+---------+------+---------+----------+--------+--------+-------------+
+| emp1  | Ann     | NULL | NULL    |      111 | D01    |  45000 | Manager     |
+| emp10 | Nami    | NULL | NULL    |      100 | D05    |  21500 | CompAss     |
+| emp2  | Joker   | NULL | NULL    |      222 | D02    |  30000 | CompAss     |
+| emp3  | Bane    | NULL | NULL    |      333 | D03    |   3000 | CompAss     |
+| emp4  | Harley  | NULL | NULL    |      444 | D04    |   4000 | CompAss     |
+| emp6  | John    | NULL | NULL    |     5646 | D01    | 200000 | CompAss     |
+| emp7  | Luffy   | NULL | NULL    |      777 | D02    |  45000 | Manager     |
+| emp8  | Zoro    | NULL | NULL    |      888 | D03    |   3999 | CompAss     |
+| emp9  | Sanji   | NULL | NULL    |      999 | D04    |   2500 | CompAss     |
++-------+---------+------+---------+----------+--------+--------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select deptno, count(*) from Employee group by deptno;
++--------+----------+
+| deptno | count(*) |
++--------+----------+
+| D01    |        2 |
+| D02    |        2 |
+| D03    |        2 |
+| D04    |        2 |
+| D05    |        1 |
++--------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select deptno, avg(salary) from Employee group by deptno;
++--------+-------------+
+| deptno | avg(salary) |
++--------+-------------+
+| D01    | 122500.0000 |
+| D02    |  37500.0000 |
+| D03    |   3499.5000 |
+| D04    |   3250.0000 |
+| D05    |  21500.0000 |
++--------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select deptno,sum(salary) from Employee group by deptno;
++--------+-------------+
+| deptno | sum(salary) |
++--------+-------------+
+| D01    |      245000 |
+| D02    |       75000 |
+| D03    |        6999 |
+| D04    |        6500 |
+| D05    |       21500 |
++--------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select deptno,min(salary), max(salary)\ from Employee group by deptno;
+ERROR: 
+Unknown command '\ '.
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\ from Employee group by deptno' at line 1
+mysql> select deptno,min(salary), max(salary) from Employee group by deptno;
++--------+-------------+-------------+
+| deptno | min(salary) | max(salary) |
++--------+-------------+-------------+
+| D01    |       45000 |      200000 |
+| D02    |       30000 |       45000 |
+| D03    |        3000 |        3999 |
+| D04    |        2500 |        4000 |
+| D05    |       21500 |       21500 |
++--------+-------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select deptno, avg(salary) from Employee where dept!='D04' group by deptno;
+ERROR 1054 (42S22): Unknown column 'dept' in 'where clause'
+mysql> select deptno, avg(salary) from Employee where deptno!='D04' group by deptno;
++--------+-------------+
+| deptno | avg(salary) |
++--------+-------------+
+| D01    | 122500.0000 |
+| D02    |  37500.0000 |
+| D03    |   3499.5000 |
+| D05    |  21500.0000 |
++--------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select deptno, avg(salary) from Employee where deptno!='D05' group by deptno;
++--------+-------------+
+| deptno | avg(salary) |
++--------+-------------+
+| D01    | 122500.0000 |
+| D02    |  37500.0000 |
+| D03    |   3499.5000 |
+| D04    |   3250.0000 |
++--------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select deptno, avg(salary) from Employee where deptno!='D01' group by deptno having avg(salary)>20000 order by avg(salary);
++--------+-------------+
+| deptno | avg(salary) |
++--------+-------------+
+| D05    |  21500.0000 |
+| D02    |  37500.0000 |
++--------+-------------+
+2 rows in set (0.00 sec)
